@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="name">Name :</string>
+    <string name="email">Email :</string>
+    <string name="role">Role :</string>
+    <string name="student_button">Student</string>
+    <string name="employee_button">Employee</string>
+    <string name="other_button">Other</string>
+    <string name="app_name">Assignment 3</string>
+</resources>
