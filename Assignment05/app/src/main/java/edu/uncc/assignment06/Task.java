@@ -12,20 +12,20 @@ public class Task implements Serializable {
     /**
      * Time in milliseconds since Epoch
      */
-    private long date;
+    private String date;
 
     /**
      * The priority of the task. the lowest being the highest
      */
-    private int priority;
+    private String priority;
 
     public Task(){
         this.name = "";
-        this.priority = -1;
-        this.date = 0;
+        this.priority = "";
+        this.date = "";
     }
 
-    public Task(String name, long date, int priority){
+    public Task(String name, String date, String priority){
         this.name = name;
         this.date = date;
         this.priority = priority;
@@ -39,19 +39,19 @@ public class Task implements Serializable {
         this.name = name;
     }
 
-    public long getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(long date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public int getPriority() {
+    public String getPriority() {
         return priority;
     }
 
-    public void setPriority(int priority) {
+    public void setPriority(String priority) {
         this.priority = priority;
     }
 
