@@ -12,10 +12,11 @@ import java.util.ArrayList;
 
 public class MainActivity
         extends
-            AppCompatActivity
+        AppCompatActivity
         implements
-            TasksFragment.TasksListener,
-            CreateTaskFragment.CreateTaskListener
+        TasksFragment.TasksListener,
+        CreateTaskFragment.CreateTaskListener,
+        SelectTaskDateFragment.SelectTaskDateFragmentListener
 {
 
     private ArrayList<Task> tasks = new ArrayList<Task>();
@@ -32,9 +33,10 @@ public class MainActivity
         });
 
         tasks.add(new Task("Clean Room", "9/23/2025", "Low"));
+        tasks.add(new Task("Do Homework", "9/23/2025", "High"));
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.main, TasksFragment.newInstance(this.tasks), "tasks-menu")
+                .replace(R.id.main, TasksFragment.newInstance(this.tasks), "task-menu")
                 .commit();
     }
 
@@ -42,21 +44,50 @@ public class MainActivity
     public void gotoCreateTask() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.main, new CreateTaskFragment(), "create-task")
+                .addToBackStack(null)
                 .commit();
     }
 
     @Override
-    public void gotoSelectDate() {
-        // implement
+    public void goBackToCreateTask(String formattedDate) {
+
+        CreateTaskFragment fragement = (CreateTaskFragment) getSupportFragmentManager().findFragmentByTag("create-task");
+
+        if(fragement != null){
+
+            if(formattedDate != null){
+
+                fragement.setDate(formattedDate);
+
+            }
+
+            getSupportFragmentManager().popBackStack();
+        }
+
     }
 
     @Override
-    public void gotoTasks(Task task) {
+    public void goBackToTaskMenu(Task task) {
 
-        this.tasks.add(task);
+        TasksFragment fragement = (TasksFragment) getSupportFragmentManager().findFragmentByTag("task-menu");
 
+        if(fragement != null){
+
+            if(task != null){
+                fragement.addTask(task);
+            }
+
+            getSupportFragmentManager().popBackStack();
+
+        }
+
+    }
+
+    @Override
+    public void gotoSetDate() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.main, TasksFragment.newInstance(this.tasks), "tasks-menu")
+                .replace(R.id.main, new SelectTaskDateFragment())
+                .addToBackStack(null)
                 .commit();
     }
 }

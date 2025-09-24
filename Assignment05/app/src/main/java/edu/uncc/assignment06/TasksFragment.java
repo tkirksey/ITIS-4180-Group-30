@@ -28,6 +28,10 @@ public class TasksFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public void addTask(Task task){
+        this.tasks.add(task);
+    }
+
     public static TasksFragment newInstance(ArrayList<Task> tasks) {
         TasksFragment fragment = new TasksFragment();
         Bundle args = new Bundle();
@@ -120,6 +124,13 @@ public class TasksFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     tasks.remove(arrayIndex);
+
+                    arrayIndex -= 1;
+
+                    if(arrayIndex == -1){
+                        arrayIndex = 0;
+                    }
+
                     refresh();
                 }
             });

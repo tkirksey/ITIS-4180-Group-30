@@ -1,5 +1,6 @@
 package edu.uncc.assignment06;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,41 +10,26 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import edu.uncc.assignment06.databinding.FragmentCreateTaskBinding;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CreateTaskFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class CreateTaskFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String DATE = "DATE";
-
-    // TODO: Rename and change types of parameters
-    private String date;
 
     public CreateTaskFragment() {
         // Required empty public constructor
     }
 
-    public static CreateTaskFragment newInstance(String param1, String param2) {
-        CreateTaskFragment fragment = new CreateTaskFragment();
-        Bundle args = new Bundle();
-        args.putString(DATE, date);
-        fragment.setArguments(args);
-        return fragment;
+    private String date = "N/A";
+    public static final String DATE_ARG = "DATE_ARG";
+
+    public void setDate(String date){
+        this.date = date;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            date = getArguments().getString(DATE);
-        }
     }
 
     FragmentCreateTaskBinding binding;
@@ -59,11 +45,66 @@ public class CreateTaskFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle("Create Task");
+
+        if(getArguments() != null && getArguments().getString(DATE_ARG) != null){
+            date = getArguments().getString(DATE_ARG);
+        }
+
+        binding.textViewDate.setText(date);
+
+        binding.buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.goBackToTaskMenu(null);
+            }
+        });
+
+        binding.buttonSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = binding.editTextTaskName.getText().toString();
+                String date = binding.textViewDate.getText().toString();
+                String priority = "";
+
+                if(binding.radioGroup.getCheckedRadioButtonId() == R.id.radioButtonLow){
+                    priority = "Low";
+                } else if (binding.radioGroup.getCheckedRadioButtonId() == R.id.radioButtonMedium) {
+                    priority = "Medium";
+                } else if (binding.radioGroup.getCheckedRadioButtonId() == R.id.radioButtonHigh){
+                    priority = "High";
+                }
+
+                if (name.isEmpty()){
+                    Toast.makeText(getActivity(), "Enter Valid Name", Toast.LENGTH_SHORT).show();
+                } else if (date.equalsIgnoreCase("N/A")) {
+                    Toast.makeText(getActivity(), "Enter Valid Date", Toast.LENGTH_SHORT).show();
+                } else if (binding.radioGroup.getCheckedRadioButtonId() == -1) {
+                    Toast.makeText(getActivity(), "Select Priority", Toast.LENGTH_SHORT).show();
+                } else{
+                    mListener.goBackToTaskMenu(new Task(name, date, priority));
+                }
+
+            }
+        });
+
+        binding.buttonSetDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.gotoSetDate();
+            }
+        });
     }
 
-    public interface CreateTaskListener {
-        void gotoSelectDate();
-        void gotoTasks(Task task);
+    CreateTaskListener mListener;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mListener = (CreateTaskListener) context;
     }
 
+    interface CreateTaskListener{
+        void goBackToTaskMenu(Task task);
+        void gotoSetDate();
+    }
 }
