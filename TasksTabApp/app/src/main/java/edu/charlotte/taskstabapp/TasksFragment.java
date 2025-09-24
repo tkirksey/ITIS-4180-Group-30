@@ -1,18 +1,27 @@
 package edu.charlotte.taskstabapp;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 
+import edu.charlotte.taskstabapp.databinding.FragmentTasksBinding;
 import edu.charlotte.taskstabapp.models.Task;
+import kotlinx.coroutines.scheduling.TaskContext;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,6 +33,7 @@ public class TasksFragment extends Fragment {
     public static final String PARAM_TASK_LIST = "PARAM_TASK_LIST";
 
     private ArrayList<Task> mTasks;
+    private int currentIndex = 0;
 
     public TasksFragment() {
         // Required empty public constructor
@@ -42,6 +52,7 @@ public class TasksFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mTasks = (ArrayList<Task>) getArguments().getSerializable(PARAM_TASK_LIST);
+            Collections.sort(mTasks);
         }
     }
 
@@ -56,14 +67,8 @@ public class TasksFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-
-        refreshScreen();
-    }
-
-    private void refreshScreen(){
-
-
+        
 
     }
+
 }

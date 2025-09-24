@@ -3,7 +3,7 @@ package edu.charlotte.taskstabapp.models;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Task implements Serializable {
+public class Task implements Serializable, Comparable {
     private Date date;
     private String title;
     private String priority;
@@ -59,5 +59,21 @@ public class Task implements Serializable {
                 ", priority='" + priority + '\'' +
                 ", id='" + id + '\'' +
                 '}';
+    }
+
+
+    @Override
+    public int compareTo(Object o) {
+
+        Task comp = (Task) o;
+
+        if(this.getDate().getTime() < comp.getDate().getTime()){
+            return -1;
+        } else if(this.getDate().getTime() == comp.getDate().getTime()){
+            return 0;
+        } else {
+            return 1;
+        }
+
     }
 }

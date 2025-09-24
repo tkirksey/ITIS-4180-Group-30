@@ -50,6 +50,16 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout = findViewById(R.id.tabLayout);
 
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+
+        new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
+            @Override
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int i) {
+                String[] tabNames = {"LOW", "MEDIUM", "HIGH", "ALL"};
+                tab.setText(tabNames[i]);
+            }
+        }).attach();
+
     }
 
     public class ViewPagerAdpater extends FragmentStateAdapter {
@@ -62,23 +72,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public Fragment createFragment(int position) {
 
-            ArrayList<Task> filteredSet = new ArrayList<>();
+            return TasksFragment.newInstance(mTasks);
 
-            for(Task t : mTasks){
-
-                String priority = t.getPriority();
-
-                if(position == 0 && priority.equals("LOW")){
-                    filteredSet.add(t);
-                } else if(position == 1 && priority.equals("MEDIUM")){
-                    filteredSet.add(t);
-                } else if(position == 2 && priority.equals("HIGH")){
-                    filteredSet.add(t);
-                }
-
-            }
-
-            return TasksFragment.newInstance(filteredSet);
         }
 
         @Override
