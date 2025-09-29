@@ -111,23 +111,28 @@ public class TasksFragment extends Fragment {
 
     private void updateScreen(){
 
+        // not strictly necessary after the first run
+        // due to not having a delete button
         textViewTasksCount.setText("This category has " + mTasks.size() + " tasks");
 
         if(mTasks.isEmpty()){
             cardViewTask.setAlpha(0.0f);
         } else {
+
+            Task currentTask = mTasks.get(currentIndex);
+
             cardViewTask.setAlpha(1.0f);
 
             textViewTaskOutOf.setText("Task " + (currentIndex + 1) + " of " + mTasks.size());
-            textViewTaskName.setText(mTasks.get(currentIndex).getTitle());
-            textViewTaskPriority.setText(mTasks.get(currentIndex).getPriority());
+            textViewTaskName.setText(currentTask.getTitle());
+            textViewTaskPriority.setText(currentTask.getPriority());
 
             Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(mTasks.get(currentIndex).getDate().getTime());
+            calendar.setTimeInMillis(currentTask.getDate().getTime());
             String formattedDate = "";
             formattedDate += (calendar.get(Calendar.MONTH) + 1) + "/";
-            formattedDate += (calendar.get(Calendar.DAY_OF_MONTH)) + "/";
-            formattedDate += (calendar.get(Calendar.YEAR));
+            formattedDate += calendar.get(Calendar.DAY_OF_MONTH) + "/";
+            formattedDate += calendar.get(Calendar.YEAR);
 
             textViewTaskDate.setText(formattedDate);
 
