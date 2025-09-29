@@ -12,8 +12,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -23,37 +27,22 @@ import edu.charlotte.taskstabapp.databinding.FragmentTasksBinding;
 import edu.charlotte.taskstabapp.models.Task;
 import kotlinx.coroutines.scheduling.TaskContext;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TasksFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class TasksFragment extends Fragment {
-
-    public static final String PARAM_TASK_LIST = "PARAM_TASK_LIST";
 
     private ArrayList<Task> mTasks;
     private int currentIndex = 0;
+
+    TextView textViewTasksCount, textViewTaskName, textViewTaskDate, textViewTaskPriority, textViewTaskOutOf;
+    ImageView imageViewPrevious, imageViewNext;
+    CardView cardViewTask;
 
     public TasksFragment() {
         // Required empty public constructor
     }
 
-    public static TasksFragment newInstance(ArrayList<Task> tasks) {
-        TasksFragment fragment = new TasksFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(PARAM_TASK_LIST, tasks);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mTasks = (ArrayList<Task>) getArguments().getSerializable(PARAM_TASK_LIST);
-            Collections.sort(mTasks);
-        }
     }
 
     @Override
@@ -67,7 +56,82 @@ public class TasksFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        
+        // Log.d("debug", "TasksFragment.onViewCreated(): I have " + mTasks.size() + " tasks!");
+
+        Collections.sort(mTasks);
+
+        FragmentTasksBinding binding = FragmentTasksBinding.bind(view);
+
+        textViewTaskOutOf = binding.textViewTaskOutOf;
+        textViewTaskName = binding.textViewTaskName;
+        textViewTaskDate = binding.textViewTaskDate;
+        textViewTasksCount = binding.textViewTasksCount;
+        textViewTaskPriority = binding.textViewTaskPriority;
+
+        imageViewNext = binding.imageViewNext;
+        imageViewPrevious = binding.imageViewPrevious;
+
+        cardViewTask = binding.cardViewTask;
+
+        imageViewNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentIndex += 1;
+
+                if(currentIndex == mTasks.size()){
+                    currentIndex = 0;
+                }
+
+                updateScreen();
+
+            }
+        });
+
+        imageViewPrevious.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentIndex -= 1;
+
+                if(currentIndex == -1){
+                    currentIndex = mTasks.size() - 1;
+                }
+
+                updateScreen();
+
+            }
+        });
+
+        updateScreen();
+
+    }
+
+    public void sendTasks(ArrayList<Task> tasks){
+        this.mTasks = tasks;
+    }
+
+    private void updateScreen(){
+
+        textViewTasksCount.setText("This category has " + mTasks.size() + " tasks");
+
+        if(mTasks.isEmpty()){
+            cardViewTask.setAlpha(0.0f);
+        } else {
+            cardViewTask.setAlpha(1.0f);
+
+            textViewTaskOutOf.setText("Task " + (currentIndex + 1) + " of " + mTasks.size());
+            textViewTaskName.setText(mTasks.get(currentIndex).getTitle());
+            textViewTaskPriority.setText(mTasks.get(currentIndex).getPriority());
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(mTasks.get(currentIndex).getDate().getTime());
+            String formattedDate = "";
+            formattedDate += (calendar.get(Calendar.MONTH) + 1) + "/";
+            formattedDate += (calendar.get(Calendar.DAY_OF_MONTH)) + "/";
+            formattedDate += (calendar.get(Calendar.YEAR));
+
+            textViewTaskDate.setText(formattedDate);
+
+        }
 
     }
 

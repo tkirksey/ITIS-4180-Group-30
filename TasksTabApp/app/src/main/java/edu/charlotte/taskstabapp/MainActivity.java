@@ -71,9 +71,26 @@ public class MainActivity extends AppCompatActivity {
         @NonNull
         @Override
         public Fragment createFragment(int position) {
-
-            return TasksFragment.newInstance(mTasks);
-
+            switch(position){
+                case 0:
+                    TasksFragment lowTSKFRG = new TasksFragment();
+                    lowTSKFRG.sendTasks(getFilteredList("LOW"));
+                    return lowTSKFRG;
+                case 1:
+                    TasksFragment medTSKFRG = new TasksFragment();
+                    medTSKFRG.sendTasks(getFilteredList("MEDIUM"));
+                    return medTSKFRG;
+                case 2:
+                    TasksFragment highTSKFRG = new TasksFragment();
+                    highTSKFRG.sendTasks(getFilteredList("HIGH"));
+                    return highTSKFRG;
+                case 3:
+                    TasksFragment allTSKFRG = new TasksFragment();
+                    allTSKFRG.sendTasks(mTasks);
+                    return allTSKFRG;
+                default:
+                    return new TasksFragment();
+            }
         }
 
         @Override
@@ -81,6 +98,18 @@ public class MainActivity extends AppCompatActivity {
             return 4;
         }
 
+    }
+
+    private ArrayList<Task> getFilteredList(String priotity){
+        ArrayList<Task> returnedList = new ArrayList<>();
+
+        for(Task t : mTasks){
+            if(t.getPriority().equals(priotity)){
+                returnedList.add(t);
+            }
+        }
+
+        return returnedList;
     }
 
 }
