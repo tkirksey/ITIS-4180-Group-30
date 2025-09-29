@@ -40,9 +40,26 @@ public class TasksFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public final static String ARGUMENT = "ARG1";
+
+    public static TasksFragment newInstance(ArrayList<Task> tasks){
+        TasksFragment tskFrg = new TasksFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARGUMENT, tasks);
+        tskFrg.setArguments(args);
+        return tskFrg;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getArguments() != null){
+            mTasks = (ArrayList<Task>) getArguments().getSerializable(ARGUMENT);
+
+            if(mTasks == null){
+                mTasks = new ArrayList<Task>();
+            }
+        }
     }
 
     @Override
@@ -78,7 +95,7 @@ public class TasksFragment extends Fragment {
             public void onClick(View v) {
                 currentIndex += 1;
 
-                if(currentIndex == mTasks.size()){
+                if(currentIndex >= mTasks.size()){
                     currentIndex = 0;
                 }
 
@@ -92,7 +109,7 @@ public class TasksFragment extends Fragment {
             public void onClick(View v) {
                 currentIndex -= 1;
 
-                if(currentIndex == -1){
+                if(currentIndex <= -1){
                     currentIndex = mTasks.size() - 1;
                 }
 
@@ -103,10 +120,6 @@ public class TasksFragment extends Fragment {
 
         updateScreen();
 
-    }
-
-    public void sendTasks(ArrayList<Task> tasks){
-        this.mTasks = tasks;
     }
 
     private void updateScreen(){

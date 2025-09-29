@@ -73,21 +73,13 @@ public class MainActivity extends AppCompatActivity {
         public Fragment createFragment(int position) {
             switch(position){
                 case 0:
-                    TasksFragment lowTSKFRG = new TasksFragment();
-                    lowTSKFRG.sendTasks(getFilteredList("LOW"));
-                    return lowTSKFRG;
+                    return TasksFragment.newInstance(getFilteredList("LOW"));
                 case 1:
-                    TasksFragment medTSKFRG = new TasksFragment();
-                    medTSKFRG.sendTasks(getFilteredList("MEDIUM"));
-                    return medTSKFRG;
+                    return TasksFragment.newInstance(getFilteredList("MEDIUM"));
                 case 2:
-                    TasksFragment highTSKFRG = new TasksFragment();
-                    highTSKFRG.sendTasks(getFilteredList("HIGH"));
-                    return highTSKFRG;
+                    return TasksFragment.newInstance(getFilteredList("HIGH"));
                 case 3:
-                    TasksFragment allTSKFRG = new TasksFragment();
-                    allTSKFRG.sendTasks(mTasks);
-                    return allTSKFRG;
+                    return TasksFragment.newInstance(mTasks);
                 default:
                     return new TasksFragment();
             }
