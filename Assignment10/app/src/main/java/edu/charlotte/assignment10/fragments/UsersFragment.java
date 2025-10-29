@@ -30,9 +30,20 @@ public class UsersFragment extends Fragment {
         // Required empty public constructor
     }
 
+    String sortText = "No Sort";
+    String filterText = "No Filter";
+
+    boolean userAdded = false;
+
     FragmentUsersBinding binding;
     ArrayList<User> mUsers = new ArrayList<>();
     UserRecyclerAdapter adapter;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mUsers.addAll(mListener.getAllUsers());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,6 +59,8 @@ public class UsersFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mListener.clearAll();
+                mUsers.clear();
+                mUsers.addAll(mListener.getAllUsers());
                 adapter.notifyDataSetChanged();
             }
         });
@@ -55,8 +68,8 @@ public class UsersFragment extends Fragment {
         binding.buttonAddNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                userAdded = true;
                 mListener.gotoAddNew();
-                adapter.notifyDataSetChanged();
             }
         });
 
@@ -64,7 +77,6 @@ public class UsersFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mListener.gotoSortSelection();
-
             }
         });
 
@@ -75,8 +87,6 @@ public class UsersFragment extends Fragment {
             }
         });
 
-        mUsers = mListener.getAllUsers();
-
         RecyclerView recyclerView = binding.recyclerView;
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -84,7 +94,9 @@ public class UsersFragment extends Fragment {
         adapter = new UserRecyclerAdapter(mUsers, new UserRecyclerAdapter.UserRecyclerAdapterListener() {
             @Override
             public void deleteUser(User user) {
-                mUsers.remove(user);
+                mListener.getAllUsers().remove(user);
+                mUsers.clear();
+                mUsers.addAll(mListener.getAllUsers());
                 adapter.notifyDataSetChanged();
             }
 
@@ -96,6 +108,21 @@ public class UsersFragment extends Fragment {
 
         recyclerView.setAdapter(adapter);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(userAdded){
+            userAdded = false;
+            mUsers.clear();
+            mUsers.addAll(mListener.getAllUsers());
+        }
+
+        binding.textViewSort.setText(sortText);
+        binding.textViewFilter.setText(filterText);
+        adapter.notifyDataSetChanged();
     }
 
     UsersListener mListener;
@@ -132,7 +159,7 @@ public class UsersFragment extends Fragment {
                     }
                 });
 
-                binding.textViewSort.setText("Name (ASC)");
+                sortText = "Name (ASC)";
 
             } else {
                 Collections.sort(mUsers, new Comparator<User>() {
@@ -142,12 +169,13 @@ public class UsersFragment extends Fragment {
                     }
                 });
 
-                binding.textViewSort.setText("Name (DESC)");
+                sortText = "Name (DESC)";
             }
 
         }
 
         if(isAgeGroupAsc != null){
+
             if(isAgeGroupAsc.booleanValue()){
                 Collections.sort(mUsers, new Comparator<User>() {
                     @Override
@@ -169,7 +197,7 @@ public class UsersFragment extends Fragment {
                     }
                 });
 
-                binding.textViewSort.setText("Age Group (ASC)");
+                sortText = "Age Group (ASC)";
 
             } else {
                 Collections.sort(mUsers, new Comparator<User>() {
@@ -192,7 +220,7 @@ public class UsersFragment extends Fragment {
                     }
                 });
 
-                binding.textViewSort.setText("Age Group (DESC)");
+                sortText = "Age Group (DESC)";
             }
 
         }
@@ -220,7 +248,7 @@ public class UsersFragment extends Fragment {
                     }
                 });
 
-                binding.textViewSort.setText("Moods (ASC)");
+                sortText = "Moods (ASC)";
 
             } else {
                 Collections.sort(mUsers, new Comparator<User>() {
@@ -243,66 +271,71 @@ public class UsersFragment extends Fragment {
                     }
                 });
 
-                binding.textViewSort.setText("Moods (DESC)");
+                sortText = "Moods (DESC)";
 
             }
 
         }
 
         if(isNameAsc == null && isAgeGroupAsc == null && isFeelingAsc == null){
-            mUsers = mListener.getAllUsers();
+            mUsers.clear();
+            mUsers.addAll(mListener.getAllUsers());
+            sortText = "No Sort";
         }
-
-        adapter.notifyDataSetChanged();
 
     }
 
-    public void sendFilters(Character firstInitial, String ageGroup, Mood mood){
+    public void sendFilters(String firstInitial, String ageGroup, Mood mood){
 
         if(firstInitial != null){
 
-            ArrayList<User> temp = new ArrayList<>();
+            mUsers.clear();
 
-            for(User user : mUsers){
-                if(user.getName().charAt(0) == firstInitial){
-                    temp.add(user);
+            for(User user : mListener.getAllUsers()){
+                if(user.getName().charAt(0) == firstInitial.charAt(0)){
+                    mUsers.add(user);
                 }
             }
 
-            mUsers = temp;
+            filterText = "FirstInitial: " + firstInitial.charAt(0);
 
         }
 
         if(ageGroup != null){
 
-            ArrayList<User> temp = new ArrayList<>();
+            mUsers.clear();
 
-            for(User user : mUsers){
-                if(user.getAgeGroup().equals(ageGroup)){
-                    temp.add(user);
+            ArrayList<String> ageFilters = new ArrayList<>(Arrays.asList(Data.getAgeFilters()));
+            ArrayList<String> ageGroups = new ArrayList<>(Arrays.asList(Data.getAgeGroups()));
+
+            for(User user : mListener.getAllUsers()){
+                if(ageGroups.indexOf(user.getAgeGroup()) == ageFilters.indexOf(ageGroup)){
+                    mUsers.add(user);
                 }
             }
 
-            mUsers = temp;
+            filterText = "AgeGroup: " + ageGroup;
 
         }
 
         if(mood != null){
 
-            ArrayList<User> temp = new ArrayList<>();
+            mUsers.clear();
 
-            for(User user : mUsers){
+            for(User user : mListener.getAllUsers()){
                 if(user.getMood().equals(mood)){
-                    temp.add(user);
+                    mUsers.add(user);
                 }
             }
 
-            mUsers = temp;
+            filterText = "Feeling: " + mood.getName();
 
         }
 
         if(firstInitial == null && ageGroup == null && mood == null){
-            mUsers = mListener.getAllUsers();
+            mUsers.clear();
+            mUsers.addAll(mListener.getAllUsers());
+            filterText = "No Filter";
         }
 
         adapter.notifyDataSetChanged();

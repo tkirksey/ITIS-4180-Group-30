@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void submitUser(User user) {
         mUsers.add(user);
+
         getSupportFragmentManager().popBackStack();
     }
 
@@ -162,8 +163,9 @@ public class MainActivity extends AppCompatActivity
         getSupportFragmentManager().popBackStack();
     }
 
+
     @Override
-    public void sendFilters(Character firstInitial, String ageGroup, Mood mood) {
+    public void sendFilters(String firstInitial, String ageGroup, Mood mood) {
         UsersFragment fragment = (UsersFragment) getSupportFragmentManager().findFragmentByTag("UserFragment");
         fragment.sendFilters(firstInitial, ageGroup, mood);
         getSupportFragmentManager().popBackStack();

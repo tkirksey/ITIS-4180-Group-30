@@ -1,47 +1,37 @@
 package edu.charlotte.trivia;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TrivaFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+
+import edu.charlotte.trivia.databinding.FragmentTrivaBinding;
+import edu.charlotte.trivia.models.Trivia;
+
 public class TrivaFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    public static final String KEY_TRIVIA_LIST = "KEY_TRIVIA_LIST";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    ArrayList<Trivia> mTrivia;
 
     public TrivaFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TrivaFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static TrivaFragment newInstance(String param1, String param2) {
+    public static TrivaFragment newInstance(ArrayList<Trivia> trivia) {
         TrivaFragment fragment = new TrivaFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable(KEY_TRIVIA_LIST, trivia);
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,10 +39,12 @@ public class TrivaFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        if (getArguments() != null && getArguments().getSerializable(KEY_TRIVIA_LIST) != null) {
+            mTrivia = (ArrayList<Trivia>) getArguments().getSerializable(KEY_TRIVIA_LIST);
+        } else {
+            mTrivia = new ArrayList<>();
         }
+        getActivity().setTitle("Select Trivia");
     }
 
     @Override
@@ -61,4 +53,37 @@ public class TrivaFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_triva, container, false);
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        FragmentTrivaBinding binding = FragmentTrivaBinding.bind(view);
+
+        ListView listView = binding.listView;
+        TriviaAdaptor adaptor = new TriviaAdaptor(getActivity(), mTrivia);
+        listView.setAdapter(adaptor);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mListener.gotoQuiz(mTrivia.get(position));
+            }
+        });
+
+
+
+    }
+
+    TriviaListener mListener;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mListener = (TriviaListener) context;
+    }
+
+    public interface TriviaListener {
+        void gotoQuiz(Trivia trivia);
+    }
+
 }

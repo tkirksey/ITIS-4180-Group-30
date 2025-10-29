@@ -4,6 +4,7 @@ import edu.charlotte.assignment10.R;
 
 public class Data {
     private static String[] ageGroups = {"Under 12 years old", "12-17 years old", "18-24 years old", "25-34 years old", "35-44 years old", "45-54 years old", "55-64 years old", "65-74 years old", "75 years or older"};
+    private static String[] ageFilters = {"Under 12", "12-17", "18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "Over 75"};
 
     private static Mood[] moods = {
             new Mood("Very Good", R.drawable.very_good),
@@ -15,6 +16,9 @@ public class Data {
 
     public static String[] getAgeGroups() {
         return ageGroups;
+    }
+    public static String[] getAgeFilters(){
+        return ageFilters;
     }
 
     public static Mood[] getMoods() {

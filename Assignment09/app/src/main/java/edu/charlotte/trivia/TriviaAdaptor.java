@@ -5,16 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import edu.charlotte.trivia.models.Trivia;
 
@@ -23,7 +18,7 @@ public class TriviaAdaptor extends ArrayAdapter<Trivia> {
     Context mContext;
     ArrayList<Trivia> mTrivia;
 
-    public TriviaAdapator(@NonNull Context context, @NonNull ArrayList<Trivia> trivia) {
+    public TriviaAdaptor(@NonNull Context context, @NonNull ArrayList<Trivia> trivia) {
         super(context, 0, trivia);
         mContext = context;
         mTrivia = trivia;
