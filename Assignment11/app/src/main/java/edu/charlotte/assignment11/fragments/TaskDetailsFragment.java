@@ -48,6 +48,11 @@ public class TaskDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        binding.textViewName.setText(mTask.name);
+        binding.textViewCategory.setText(mTask.category);
+        binding.textViewPriority.setText(mTask.priority_name);
+
         binding.buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,7 +63,7 @@ public class TaskDetailsFragment extends Fragment {
         binding.imageViewDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mListener.onTaskDeleted(mTask);
             }
         });
     }

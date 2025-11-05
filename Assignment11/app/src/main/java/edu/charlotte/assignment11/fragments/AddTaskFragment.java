@@ -69,8 +69,8 @@ public class AddTaskFragment extends Fragment {
                 } else if(selectedPriority == null) {
                     Toast.makeText(getActivity(), "Select Priority !!", Toast.LENGTH_SHORT).show();
                 } else {
-                    //Task task = new Task(name, selectedCategory, selectedPriority);
-                    //mListener.onTaskAdded(task);
+                    Task task = new Task(name, selectedCategory, selectedPriority);
+                    mListener.onTaskAdded(task);
                 }
             }
         });

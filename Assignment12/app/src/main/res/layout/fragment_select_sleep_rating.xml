@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout4"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    tools:context=".SelectSleepRatingFragment">
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Rating"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="389dp"
+        android:layout_height="252dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9">
+
+        <RadioButton
+            android:id="@+id/rbExcellent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Excellent(5)" />
+
+        <RadioButton
+            android:id="@+id/rbVeryGood"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Very Good(4)" />
+
+        <RadioButton
+            android:id="@+id/rbGood"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Good(3)" />
+
+        <RadioButton
+            android:id="@+id/rbFair"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fair(2)" />
+
+        <RadioButton
+            android:id="@+id/rbPoor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Poor(1)" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/buttonCancel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="30dp"
+        android:text="@string/cancel_button"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonSubmit"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/buttonSubmit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:text="@string/submit_button"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonCancel" />
+</androidx.constraintlayout.widget.ConstraintLayout>
