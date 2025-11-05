@@ -15,8 +15,11 @@ public class MainActivity extends AppCompatActivity implements AddLogFragment.Ad
         MainFragment.MainFragmentListener,
         SelectSleepRatingFragment.SelectSleepRatingFragmentListener,
         SelectSleepAmountFragment.SelectSleepAmountFragmentListener,
-        SelectDateFragment.SelectDateFragmentListener
+        SelectDateFragment.SelectDateFragmentListener,
+        SelectExerciseTimeFragment.ExerciseTimeListener
 {
+
+    LogDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +32,14 @@ public class MainActivity extends AppCompatActivity implements AddLogFragment.Ad
             return insets;
         });
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.main, new MainFragment())
-                .commit();
-
-        LogDatabase db = Room.databaseBuilder(this, LogDatabase.class, "log.db")
+        db = Room.databaseBuilder(this, LogDatabase.class, "log.db")
                 .allowMainThreadQueries()
                 .fallbackToDestructiveMigration()
                 .build();
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main, new MainFragment())
+                .commit();
     }
 
     @Override
@@ -46,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements AddLogFragment.Ad
 
     @Override
     public void sendToMain(Log log) {
+        db.logDao().insertAll(log);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.main, new MainFragment())
                 .commit();
@@ -95,6 +99,16 @@ public class MainActivity extends AppCompatActivity implements AddLogFragment.Ad
     }
 
     @Override
+    public LogDatabase getDb() {
+        return db;
+    }
+
+    @Override
+    public void gotoVisualize() {
+
+    }
+
+    @Override
     public void sendSelectedRating(String rating) {
         AddLogFragment fragment = (AddLogFragment) getSupportFragmentManager().findFragmentByTag("add-log-fragment");
         if (fragment != null) {
@@ -115,7 +129,9 @@ public class MainActivity extends AppCompatActivity implements AddLogFragment.Ad
 
     @Override
     public void sendSleepAmount(float amount) {
-
+        AddLogFragment fragment = (AddLogFragment) getSupportFragmentManager().findFragmentByTag("add-log-fragment");
+        fragment.setSleepAmount(amount);
+        getSupportFragmentManager().popBackStack();
     }
 
     @Override
@@ -129,6 +145,18 @@ public class MainActivity extends AppCompatActivity implements AddLogFragment.Ad
 
     @Override
     public void cancelSelectDate() {
+        getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void onCancel() {
+        getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void onExerciseTimeSelect(float amount) {
+        AddLogFragment fragment = (AddLogFragment) getSupportFragmentManager().findFragmentByTag("add-log-fragment");
+        fragment.setExerciseAmount(amount);
         getSupportFragmentManager().popBackStack();
     }
 }

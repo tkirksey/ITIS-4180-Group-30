@@ -20,7 +20,7 @@ public interface LogDao {
     void update(Log log);
 
     @Insert
-    void insertAll(Log ... logs);
+    void insertAll(Log... logs);
 
     @Delete
     void deleteAll(Log log);

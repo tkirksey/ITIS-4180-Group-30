@@ -26,6 +26,8 @@ public class AddLogFragment extends Fragment {
 
     String rating;
     Date date;
+    float sleepAmount = 0f;
+    float exerciseAmount = 0f;
 
     public AddLogFragment() {
         // Required empty public constructor
@@ -59,7 +61,17 @@ public class AddLogFragment extends Fragment {
 
         binding.textViewSleepQuality.setText(rating);
 
+        if(sleepAmount > 0){
+            binding.textViewSleepAmount.setText(sleepAmount + " Hours");
+        } else {
+            binding.textViewSleepAmount.setText("");
+        }
 
+        if(exerciseAmount > 0){
+            binding.textViewExerciseTime.setText(exerciseAmount + " Hours");
+        } else {
+            binding.textViewExerciseTime.setText("");
+        }
 
         binding.buttonSelectDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,20 +105,33 @@ public class AddLogFragment extends Fragment {
         binding.buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String dateNtime = binding.textViewDateAndTime.toString();
-                String sleepAmount = binding.textViewSleepAmount.toString();
-                String exerciseTime = binding.textViewExerciseTime.toString();
-                String weight = binding.editTextWeight.toString();
 
-                if (dateNtime.isEmpty()) {
+                if (binding.textViewDateAndTime.toString().isEmpty()) {
                     Toast.makeText(getContext(), "Select a date", Toast.LENGTH_SHORT).show();
-                } else if (sleepAmount.isEmpty()) {
+                    return;
+                } else if (binding.textViewSleepAmount.toString().isEmpty()) {
                     Toast.makeText(getContext(), "Select a time amount", Toast.LENGTH_SHORT).show();
-                } else if (exerciseTime.isEmpty()) {
+                    return;
+                } else if (binding.textViewExerciseTime.toString().isEmpty()) {
                     Toast.makeText(getContext(), "Select a time amount", Toast.LENGTH_SHORT).show();
-                } else if (weight.isEmpty()) {
+                    return;
+                } else if (binding.editTextWeight.toString().isEmpty()) {
                     Toast.makeText(getContext(), "Enter a weight", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+
+                float weight = 0.0f;
+
+                try {
+                     weight = Float.valueOf(binding.editTextWeight.getText().toString());
+                } catch(Exception e){
+                    Toast.makeText(getContext(), "Enter a valid weight", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                mLog = new Log(date.getTime(), sleepAmount, rating, exerciseAmount, weight);
+
+                mListener.sendToMain(mLog);
             }
         });
 
@@ -137,6 +162,13 @@ public class AddLogFragment extends Fragment {
         this.date = date;
     }
 
+    public void setSleepAmount(float sleepAmount){
+        this.sleepAmount = sleepAmount;
+    }
+
+    public void setExerciseAmount(float exerciseAmount){
+        this.exerciseAmount = exerciseAmount;
+    }
 
     interface AddLogFragmentListener{
         void cancelLog();
