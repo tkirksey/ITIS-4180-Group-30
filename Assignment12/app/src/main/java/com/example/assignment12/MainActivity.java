@@ -16,7 +16,8 @@ public class MainActivity extends AppCompatActivity implements AddLogFragment.Ad
         SelectSleepRatingFragment.SelectSleepRatingFragmentListener,
         SelectSleepAmountFragment.SelectSleepAmountFragmentListener,
         SelectDateFragment.SelectDateFragmentListener,
-        SelectExerciseTimeFragment.ExerciseTimeListener
+        SelectExerciseTimeFragment.ExerciseTimeListener,
+        VisualizeFragment.VisualizeListener
 {
 
     LogDatabase db;
@@ -105,7 +106,10 @@ public class MainActivity extends AppCompatActivity implements AddLogFragment.Ad
 
     @Override
     public void gotoVisualize() {
-
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main, new VisualizeFragment())
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override

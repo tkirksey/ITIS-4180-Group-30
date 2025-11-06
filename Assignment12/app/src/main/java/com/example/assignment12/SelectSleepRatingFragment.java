@@ -43,15 +43,15 @@ public class SelectSleepRatingFragment extends Fragment {
             public void onCheckedChanged(@NonNull RadioGroup group, int checkedId) {
 //                String rating = "";
                 if (checkedId == R.id.rbExcellent) {
-                    rating = "Excellent(5)";
+                    rating = DataService.ratings.get(4);
                 } else if (checkedId == R.id.rbVeryGood) {
-                    rating = "Very Good(4)";
+                    rating = DataService.ratings.get(3);
                 } else if (checkedId == R.id.rbGood) {
-                    rating = "Good(3)";
+                    rating = DataService.ratings.get(2);
                 } else if (checkedId == R.id.rbFair) {
-                    rating = "Fair(2)";
+                    rating = DataService.ratings.get(1);
                 } else if (checkedId == R.id.rbPoor) {
-                    rating = "Poor(1)";
+                    rating = DataService.ratings.get(0);
                 }
 
             }

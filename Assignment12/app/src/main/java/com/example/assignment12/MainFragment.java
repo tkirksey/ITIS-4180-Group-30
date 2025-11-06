@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.assignment12.databinding.FragmentAddLogBinding;
 import com.example.assignment12.databinding.FragmentMainBinding;
@@ -79,6 +80,12 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                if(mLogs.isEmpty()){
+                    Toast.makeText(getActivity(), "Please add a log to visualize!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                mListener.gotoVisualize();
             }
         });
 
